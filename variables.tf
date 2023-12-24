@@ -20,13 +20,13 @@ variable "private_subnets" {
 }
 variable "prefix" {
   type    = string
-  default = "Mini-project"
+  default = "GoGreen-project"
 
 }
-variable "ec2" {
+variable "nat-rta" {
   type = map(object({
-    server_name = string,
-    subnet_id   = string
+    route_table_id = string,
+    subnet_id      = string
   }))
   default = {
   }
@@ -36,20 +36,22 @@ variable "security-groups" {
   type = map(object({
     description = string
     ingress_rules = optional(list(object({
-      description = optional(string)
-      priority    = optional(number)
-      from_port   = number
-      to_port     = number
-      protocol    = string
-      cidr_blocks = list(string)
+      description     = optional(string)
+      priority        = optional(number)
+      from_port       = number
+      to_port         = number
+      protocol        = string
+      cidr_blocks     = list(string)
+      security_groups = optional(list(string))
     })))
     egress_rules = list(object({
-      description = optional(string)
-      priority    = optional(number)
-      from_port   = number
-      to_port     = number
-      protocol    = string
-      cidr_blocks = list(string)
+      description     = optional(string)
+      priority        = optional(number)
+      from_port       = number
+      to_port         = number
+      protocol        = string
+      cidr_blocks     = list(string)
+      security_groups = optional(list(string))
     }))
   }))
 }
