@@ -98,9 +98,28 @@ resource "aws_route_table_association" "rt-nat" {
   #subnet_id      = [module.subnets.subnet_ids["public_subnets"]]
   route_table_id = aws_route_table.rt-nat[each.value.route_table_id].id
 }
-# resource "aws_route_table_association" "rt-nat-app1B" {
-#   for_each  = var.private_subnets
-#   subnet_id = aws_subnet.private_subnet["Private_Sub_APP_1B"].id
-#   #subnet_id      = [module.subnets.subnet_ids["public_subnets"]]
-#   route_table_id = aws_route_table.rt-nat["Public_Sub_WEB_1B"].id
+
+resource "aws_key_pair" "WEB_tier" {
+  key_name   = "WEB_tier"
+  public_key = file("~/.ssh/cloud_2024.pem.pub")
+  lifecycle {
+    ignore_changes = [public_key]
+  }
+}
+resource "aws_key_pair" "APP_tier" {
+  key_name   = "APP_tier"
+  public_key = file("~/.ssh/cloud_2024.pem.pub")
+  lifecycle {
+    ignore_changes = [public_key]
+  }
+}
+module "security-groups" {
+  source          = "app.terraform.io/pitt412/security-groups/aws"
+  version         = "1.0.0"
+  vpc_id          = aws_vpc.vpc.id
+  security_groups = var.security-groups
+}
+# data "aws_acm_certificate" "test_cert" {
+#   domain   = "*.mydomain.com"
+#   statuses = ["ISSUED"]
 # }

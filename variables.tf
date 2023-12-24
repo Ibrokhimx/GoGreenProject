@@ -55,3 +55,17 @@ variable "security-groups" {
     }))
   }))
 }
+variable "key_name" {
+  type    = string
+  default = ""
+}
+
+variable "ssl_certificate_arn" {
+  type    = string
+  default = ""
+}
+
+variable "database_name" {
+  type    = string
+  default = ""
+}

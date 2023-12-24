@@ -1,5 +1,34 @@
 security-groups = {
-  "WEB_sg" : {
+  "ALB_WEB_sg" : {
+    description = "Security group for web servers"
+    ingress_rules = [
+      {
+        description = "ingress rule for http"
+        priority    = 200
+        from_port   = 80
+        to_port     = 80
+        protocol    = "tcp"
+        cidr_blocks = ["0.0.0.0/0"]
+      },
+      {
+        description = "ingress rule for http"
+        priority    = 204
+        from_port   = 443
+        to_port     = 443
+        protocol    = "tcp"
+        cidr_blocks = ["0.0.0.0/0"]
+      }
+    ]
+    egress_rules = [
+      {
+        from_port   = 0
+        to_port     = 0
+        protocol    = "-1"
+        cidr_blocks = ["0.0.0.0/0"]
+      }
+    ]
+  },
+  "WEB_EC2_sg" : {
     description = "Security group for web servers"
     ingress_rules = [
       {
@@ -37,6 +66,7 @@ security-groups = {
     ]
   }
 }
+
 
 public_subnets = {
   Public_Sub_WEB_1C = {
@@ -77,7 +107,7 @@ private_subnets = {
 nat-rta = {
   APP-1C = {
     route_table_id = "Public_Sub_WEB_1C",
-    subnet_id      =  "Private_Sub_APP_1C"
+    subnet_id      = "Private_Sub_APP_1C"
   },
   DB-1C = {
     route_table_id = "Public_Sub_WEB_1C",
@@ -99,7 +129,7 @@ nat-rta = {
 #   APP-1C = {
 #     subnet_id      =  "",
 #     route_table_id = ""
-    
+
 #   },
 #   DB-1C = {
 #     subnet_id      =  "",
