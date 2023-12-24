@@ -94,9 +94,9 @@ resource "aws_route_table" "rt-nat" {
 }
 resource "aws_route_table_association" "rt-nat" {
   for_each  = var.nat-rta
-  subnet_id = aws_subnet.private_subnet[each.key].id
+  subnet_id = aws_subnet.private_subnet[each.value.subnet_id].id
   #subnet_id      = [module.subnets.subnet_ids["public_subnets"]]
-  route_table_id = aws_route_table.rt-nat[each.key].id
+  route_table_id = aws_route_table.rt-nat[each.value.route_table_id].id
 }
 # resource "aws_route_table_association" "rt-nat-app1B" {
 #   for_each  = var.private_subnets
@@ -104,11 +104,3 @@ resource "aws_route_table_association" "rt-nat" {
 #   #subnet_id      = [module.subnets.subnet_ids["public_subnets"]]
 #   route_table_id = aws_route_table.rt-nat["Public_Sub_WEB_1B"].id
 # }
-data "aws_ami" "amazon-linux2" {
-  owners      = ["amazon"]
-  most_recent = true
-  filter {
-    name   = "name"
-    values = ["amzn2-ami-kernel-*"]
-  }
-}

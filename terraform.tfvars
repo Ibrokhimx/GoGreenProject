@@ -74,47 +74,46 @@ private_subnets = {
 }
 
 
+nat-rta = {
+  APP-1C = {
+    route_table_id = "Public_Sub_WEB_1C",
+    subnet_id      =  "Private_Sub_APP_1C"
+  },
+  DB-1C = {
+    route_table_id = "Public_Sub_WEB_1C",
+    subnet_id      = "Private_Sub_DB_1C"
+  },
+  APP-1B = {
+    route_table_id = "Public_Sub_WEB_1B",
+    subnet_id      = "Private_Sub_APP_1B"
+  },
+  DB-1B = {
+    route_table_id = "Public_Sub_WEB_1B",
+    subnet_id      = "Private_Sub_DB_1B"
+
+  }
+
+}
+
 # nat-rta = {
 #   APP-1C = {
-#     route_table_id = aws_route_table.rt-nat["Public_Sub_WEB_1C"].id,
-#     subnet_id      =  aws_subnet.private_subnet["Private_Sub_APP_1C"].id
+#     subnet_id      =  "",
+#     route_table_id = ""
+    
 #   },
 #   DB-1C = {
-#     route_table_id = aws_route_table.rt-nat["Public_Sub_DB_1C"].id,
-#     subnet_id      = aws_subnet.private_subnet["Private_Sub_APP_1C"].id
+#     subnet_id      =  "",
+#     route_table_id = ""
 
 #   },
 #   APP-1B = {
-#     route_table_id = aws_route_table.rt-nat["Public_Sub_WEB_1B"].id,
-#     subnet_id      = aws_subnet.private_subnet["Private_Sub_APP_1B"].id
+#     subnet_id      =  "",
+#     route_table_id = ""
 #   },
 #   DB-1B = {
-#     route_table_id = aws_route_table.rt-nat["Public_Sub_DB_1B"].id,
-#     subnet_id      = aws_subnet.private_subnet["Private_Sub_APP_1B"].id
+#     subnet_id      =  "",
+#     route_table_id = ""
 
 #   },
 
 # }
-
-nat-rta = {
-  APP-1C = {
-    subnet_id      =  "",
-    route_table_id = ""
-    
-  },
-  DB-1C = {
-    subnet_id      =  "",
-    route_table_id = ""
-
-  },
-  APP-1B = {
-    subnet_id      =  "",
-    route_table_id = ""
-  },
-  DB-1B = {
-    subnet_id      =  "",
-    route_table_id = ""
-
-  },
-
-}
