@@ -11,7 +11,14 @@ resource "aws_launch_configuration" "WEB_lc" {
     create_before_destroy = true
   }
 }
-
+resource "aws_security_group_rule" "opened_to_alb" {
+  type                     = "ingress"
+  from_port                = 80
+  to_port                  = 80
+  protocol                 = "tcp"
+  source_security_group_id = module.security-groups.security_group_id["ALB_WEB_sg"]
+  security_group_id        = module.security-groups.security_group_id["WEB_EC2_sg"]
+}
 resource "aws_lb_target_group" "WEB_tg" {
   #name_prefix = var.prefix
   port     = 80
@@ -61,14 +68,18 @@ resource "aws_lb_listener" "WEB_alb_listener_1" {
   protocol          = "HTTP"
 
   default_action {
-    type = "redirect"
-
-    redirect {
-      port        = "443"
-      protocol    = "HTTPS"
-      status_code = "HTTP_301"
-    }
+    type             = "forward"
+    target_group_arn = aws_lb_target_group.WEB_tg.arn
   }
+  # default_action {
+  #   type = "redirect"
+
+  #   redirect {
+  #     port        = "443"
+  #     protocol    = "HTTPS"
+  #     status_code = "HTTP_301"
+  #   }
+  # }
 }
 # resource "aws_acm_certificate" "example" {
 #   # ...
@@ -83,7 +94,7 @@ resource "aws_lb_listener" "WEB_alb_listener_1" {
 #   load_balancer_arn = aws_lb.WEB_alb.arn
 #   port              = "443"
 #   protocol          = "HTTPS"
-#   certificate_arn   = aws_lb_listener_certificate.example
+#   #certificate_arn   = aws_lb_listener_certificate.example
 #   #certificate_arn   = var.ssl_certificate_arn
 
 #   default_action {

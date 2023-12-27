@@ -119,7 +119,3 @@ module "security-groups" {
   vpc_id          = aws_vpc.vpc.id
   security_groups = var.security-groups
 }
-# data "aws_acm_certificate" "test_cert" {
-#   domain   = "*.mydomain.com"
-#   statuses = ["ISSUED"]
-# }

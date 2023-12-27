@@ -69,3 +69,21 @@ variable "database_name" {
   type    = string
   default = ""
 }
+# variable "iam_user" {
+#   type = map(object({
+#     name = string,
+#     tags =map(string)
+    
+#   }))
+#   default = {
+#   }
+# }
+variable "iam_user" {
+  type = map(object({
+    name = string,
+    tags          = map(string)
+  }))
+  default = {
+
+  }
+}
