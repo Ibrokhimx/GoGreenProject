@@ -31,30 +31,30 @@ variable "nat-rta" {
   default = {
   }
 }
-variable "security-groups" {
-  description = "A map of security groups with their rules"
-  type = map(object({
-    description = string
-    ingress_rules = optional(list(object({
-      description     = optional(string)
-      priority        = optional(number)
-      from_port       = number
-      to_port         = number
-      protocol        = string
-      cidr_blocks     = list(string)
-      security_groups = optional(list(string))
-    })))
-    egress_rules = list(object({
-      description     = optional(string)
-      priority        = optional(number)
-      from_port       = number
-      to_port         = number
-      protocol        = string
-      cidr_blocks     = list(string)
-      security_groups = optional(list(string))
-    }))
-  }))
-}
+# variable "security-groups" {
+#   description = "A map of security groups with their rules"
+#   type = map(object({
+#     description = string
+#     ingress_rules = optional(list(object({
+#       description     = optional(string)
+#       priority        = optional(number)
+#       from_port       = number
+#       to_port         = number
+#       protocol        = string
+#       cidr_blocks     = optional(list(string))
+#       security_groups = optional(list(string))
+#     })))
+#     egress_rules = list(object({
+#       description     = optional(string)
+#       priority        = optional(number)
+#       from_port       = number
+#       to_port         = number
+#       protocol        = string
+#       cidr_blocks     = list(string)
+#       security_groups = optional(list(string))
+#     }))
+#   }))
+# }
 variable "key_name" {
   type    = string
   default = ""
@@ -73,7 +73,7 @@ variable "database_name" {
 #   type = map(object({
 #     name = string,
 #     tags =map(string)
-    
+
 #   }))
 #   default = {
 #   }
@@ -81,9 +81,23 @@ variable "database_name" {
 variable "iam_user" {
   type = map(object({
     name = string,
-    tags          = map(string)
+    tags = map(string)
   }))
   default = {
 
   }
+}
+variable "dbusername" {
+  description = "The username for the DB master user"
+  type        = string
+  default     = "admin"
+}
+variable "dbpassword" {
+  description = "The password for the DB master user"
+  type        = string
+  default     = "password"
+}
+variable "admin_ip" {
+  type    = string
+  default = "0.0.0.0/0"
 }

@@ -113,9 +113,3 @@ resource "aws_key_pair" "APP_tier" {
     ignore_changes = [public_key]
   }
 }
-module "security-groups" {
-  source          = "app.terraform.io/pitt412/security-groups/aws"
-  version         = "1.0.0"
-  vpc_id          = aws_vpc.vpc.id
-  security_groups = var.security-groups
-}

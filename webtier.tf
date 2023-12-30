@@ -3,22 +3,15 @@ resource "aws_launch_configuration" "WEB_lc" {
   image_id                    = data.aws_ami.amazon-linux2.id
   instance_type               = "t2.micro"
   key_name                    = aws_key_pair.WEB_tier.key_name
-  security_groups             = [module.security-groups.security_group_id["WEB_EC2_sg"]]
+  security_groups             = [module.web_security_group1.security_group_id["web_ec2_sg"]]
   associate_public_ip_address = true
-  #user_data                   = templatefile("files/presentation_user_data.tmpl", {database_name = var.database_name})
-
+  #iam_instance_profile = aws_iam_instance_profile.s3_profile.id
+  user_data = filebase64("${path.module}/application.sh")
   lifecycle {
     create_before_destroy = true
   }
 }
-resource "aws_security_group_rule" "opened_to_alb" {
-  type                     = "ingress"
-  from_port                = 80
-  to_port                  = 80
-  protocol                 = "tcp"
-  source_security_group_id = module.security-groups.security_group_id["ALB_WEB_sg"]
-  security_group_id        = module.security-groups.security_group_id["WEB_EC2_sg"]
-}
+
 resource "aws_lb_target_group" "WEB_tg" {
   #name_prefix = var.prefix
   port     = 80
@@ -30,7 +23,7 @@ resource "aws_autoscaling_group" "WEB_asg" {
   name_prefix          = var.prefix
   launch_configuration = aws_launch_configuration.WEB_lc.name
   min_size             = 2
-  max_size             = 6
+  max_size             = 4
   health_check_type    = "ELB"
   vpc_zone_identifier  = [aws_subnet.public_subnet["Public_Sub_WEB_1C"].id, aws_subnet.public_subnet["Public_Sub_WEB_1B"].id]
   target_group_arns    = [aws_lb_target_group.WEB_tg.arn]
@@ -58,7 +51,7 @@ resource "aws_lb" "WEB_alb" {
   #name_prefix        = var.prefix
   internal           = false
   load_balancer_type = "application"
-  security_groups    = [module.security-groups.security_group_id["ALB_WEB_sg"]]
+  security_groups    = [module.web_security_group.security_group_id["alb_web_sg"]]
   subnets            = [aws_subnet.public_subnet["Public_Sub_WEB_1C"].id, aws_subnet.public_subnet["Public_Sub_WEB_1B"].id]
 }
 
@@ -71,6 +64,8 @@ resource "aws_lb_listener" "WEB_alb_listener_1" {
     type             = "forward"
     target_group_arn = aws_lb_target_group.WEB_tg.arn
   }
+
+}
   # default_action {
   #   type = "redirect"
 
@@ -80,7 +75,6 @@ resource "aws_lb_listener" "WEB_alb_listener_1" {
   #     status_code = "HTTP_301"
   #   }
   # }
-}
 # resource "aws_acm_certificate" "example" {
 #   # ...
 # }
