@@ -1,52 +1,17 @@
 
 
 resource "aws_launch_template" "WEB_lc" {
-  name_prefix   = var.prefix
-  description   = "Template to launch EC2 instance and deploy the application"
-  image_id      = data.aws_ami.amazon-linux2.id
-  instance_type = "t2.micro"
-  key_name      = aws_key_pair.WEB_tier.key_name
-  #depends_on = [aws_rds_cluster.LabVPCDBCluster, aws_rds_cluster_instance.LabVPCDBInstances]
+  name_prefix            = var.prefix
+  description            = "Template to launch EC2 instance and deploy the application"
+  image_id               = data.aws_ami.amazon-linux2.id
+  instance_type          = "t2.micro"
+  key_name               = aws_key_pair.WEB_tier.key_name
   vpc_security_group_ids = [module.web_security_group1.security_group_id["web_ec2_sg"]]
   # iam_instance_profile {
   #     arn = aws_iam_instance_profile.IAMinstanceprofile.arn
   # }
-  #     metadata_options {
-  #   http_endpoint               = "enabled"
-  #   http_tokens                 = "required"
-  #   http_put_response_hop_limit = 1
-  #   instance_metadata_tags      = "enabled"
-  # }
-  #   network_interfaces {
-  #   associate_public_ip_address = true
-  #   security_groups = [module.web_security_group1.security_group_id["web_ec2_sg"]]
-  # }
-  #user_data = "${filebase64("application.sh")}"
-  user_data =base64encode( <<-EOF
-                    #cloud-boothook
-                    #!/bin/bash -ex
-                    {
-                    # Update the system
-                    yum -y update
-                    # Install MySQL Community Server
-                    yum -y install mysql-community-server
-                    yum -y install https://dev.mysql.com/get/mysql80-community-release-el9-1.noarch.rpm
-                    # Start and enable MySQL
-                    systemctl start mysqld
-                    systemctl enable mysqld
-                    # Install Apache and PHP
-                    yum -y install httpd php
-                    # Start and enable Apache
-                    systemctl start httpd
-                    systemctl enable httpd
-                    cd /var/www/html
-                    wget https://aws-tc-largeobjects.s3-us-west-2.amazonaws.com/CUR-TF-200-ACACAD/studentdownload/lab-app.tgz
-                    tar xvfz lab-app.tgz
-                    chown apache:root /var/www/html/rds.conf.php
-                    }
-                    &> /var/log/user_data.log
-                    EOF 
-  )
+  user_data = filebase64("application.sh")
+
 }
 resource "aws_autoscaling_group" "WEB_asg" {
   vpc_zone_identifier       = [aws_subnet.public_subnet["Public_Sub_WEB_1C"].id, aws_subnet.public_subnet["Public_Sub_WEB_1B"].id]
@@ -125,12 +90,7 @@ resource "aws_lb_target_group" "WEB_tg" {
 output "WEB_alb" {
   value = aws_lb.WEB_alb.dns_name
 }
-# resource "aws_lb_target_group" "WEB_tg" {
-#   name_prefix = "pub-"
-#   port     = 80
-#   protocol = "HTTP"
-#   vpc_id   = aws_vpc.vpc.id
-# }
+
 
 # resource "aws_autoscaling_group" "WEB_asg" {
 #   name_prefix          = var.prefix

@@ -67,11 +67,6 @@ resource "aws_route_table_association" "rta" {
   route_table_id = aws_route_table.rt.id
 }
 
-# resource "aws_nat_gateway" "ngw" {
-#   for_each      = var.public_subnets
-#   subnet_id     = aws_subnet.public_subnet[each.key].id
-#   allocation_id = aws_eip.nat[each.key].id
-# }
 resource "aws_nat_gateway" "ngw" {
   for_each      = var.public_subnets
   subnet_id     = aws_subnet.public_subnet[each.key].id

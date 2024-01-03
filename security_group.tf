@@ -65,38 +65,6 @@ module "web_security_group" {
         }
       ]
     }
-    # "web_ec2_sg" : {
-    #   description = "Security group for web servers"
-    #       ingress_rules = [
-    #     {
-    #       description = "ingress rule for http"
-    #       priority    = 203
-    #       from_port   = 80
-    #       to_port     = 80
-    #       protocol    = "tcp"
-    #       #security_groups = [module.web_security_group.security_group_id["alb_web_sg"]]
-    #     },
-    #     {
-
-    #     {
-    #       description = "ingress rule for http"
-    #       priority    = 204
-    #       from_port   = 443
-    #       to_port     = 443
-    #       protocol    = "tcp"
-    #       cidr_blocks = ["0.0.0.0/0"]
-    #     }
-    #   ]
-    #   egress_rules = [
-    #     {
-    #       description = "egress rule"
-    #       from_port   = 0
-    #       to_port     = 0
-    #       protocol    = "-1"
-    #       cidr_blocks = ["0.0.0.0/0"]
-    #     }
-    #   ]
-    # }
   }
 }
 
@@ -117,13 +85,13 @@ module "web_security_group1" {
           security_groups = [module.web_security_group.security_group_id["alb_web_sg"]]
         },
         {
-          description = "my_ssh"
-          priority    = 208
-          from_port   = 22
-          to_port     = 22
-          protocol    = "tcp"
-          cidr_blocks = ["0.0.0.0/0"]
-          #cidr_blocks     = [join("", [aws_instance.bastion.private_ip, "/32"])]
+          description     = "my_ssh"
+          priority        = 208
+          from_port       = 22
+          to_port         = 22
+          protocol        = "tcp"
+          cidr_blocks     = ["0.0.0.0/0"]
+          cidr_blocks     = [join("", [aws_instance.bastion.private_ip, "/32"])]
           security_groups = [module.bastion_security_group.security_group_id["bastion_sg"]]
         },
         {
@@ -175,36 +143,6 @@ module "app_security_group" {
         }
       ]
     }
-    # "app_ec2_sg" : {
-    #   description = "Security group for app servers"
-    #   ingress_rules = [
-    #     {
-    #       description = "ingress rule for http"
-    #       priority    = 206
-    #       from_port   = 80
-    #       to_port     = 80
-    #       protocol    = "tcp"
-    #       #security_groups = "${module.app_security_group.security_group_id["alb_app_sg"]}"
-    #     },
-    #     {
-    #       description = "my_ssh"
-    #       priority    = 202
-    #       from_port   = 22
-    #       to_port     = 22
-    #       protocol    = "tcp"
-    #       cidr_blocks = [join("", [aws_instance.bastion.private_ip, "/32"])]
-    #     }
-    #   ]
-    #   egress_rules = [
-    #     {
-    #       description = "egress rule"
-    #       from_port   = 0
-    #       to_port     = 0
-    #       protocol    = "-1"
-    #       cidr_blocks = ["0.0.0.0/0"]
-    #     }
-    #   ]
-    # }
   }
 }
 module "app_security_group1" {
@@ -281,13 +219,4 @@ module "db_security_group" {
 #   protocol                 = "tcp"
 #   source_security_group_id = "${module.web_security_group1.security_group_id["web_ec2_sg"]}"
 #   security_group_id        = "${module.web_security_group.security_group_id["alb_web_sg"]}"
-# }
-
-# resource "aws_security_group_rule" "opened_to_alb_app" {
-#   type                     = "ingress"
-#   from_port                = 80
-#   to_port                  = 80
-#   protocol                 = "tcp"
-#   source_security_group_id = "${module.app_security_group.security_group_id["alb_app_sg"]}"
-#   security_group_id        = "${module.app_security_group1.security_group_id["app_ec2_sg"]}"
 # }
