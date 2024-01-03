@@ -29,7 +29,7 @@ jobs:
         run: terraform apply -auto-approve
         working-directory: 
       - name: Wait 10 minutes for testing
-        run: sleep 600
+        run: sleep 1800
         working-directory: 
       - name: Run Terraform Apply
         run: terraform -destroy -auto-approve

@@ -1,9 +1,10 @@
 resource "aws_launch_template" "APP_lc" {
-  name_prefix            = var.prefix
-  description            = "Template to launch EC2 instance and deploy the application"
-  image_id               = data.aws_ami.amazon-linux2.id
-  instance_type          = "t2.micro"
-  key_name               = aws_key_pair.WEB_tier.key_name
+  name_prefix   = var.prefix
+  description   = "Template to launch EC2 instance and deploy the application"
+  image_id      = data.aws_ami.amazon-linux2.id
+  instance_type = "t2.micro"
+  key_name      = "GoGreen"
+  #key_name               = aws_key_pair.WEB_tier.key_name
   vpc_security_group_ids = [module.app_security_group1.security_group_id["app_ec2_sg"]]
   iam_instance_profile {
     arn = aws_iam_instance_profile.s3_profile.arn

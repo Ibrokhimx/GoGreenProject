@@ -94,17 +94,17 @@ resource "aws_route_table_association" "rt-nat" {
   route_table_id = aws_route_table.rt-nat[each.value.route_table_id].id
 }
 
-resource "aws_key_pair" "WEB_tier" {
-  key_name   = "WEB_tier"
-  public_key = file("~/.ssh/cloud_2024.pem.pub")
-  lifecycle {
-    ignore_changes = [public_key]
-  }
-}
-resource "aws_key_pair" "APP_tier" {
-  key_name   = "APP_tier"
-  public_key = file("~/.ssh/cloud_2024.pem.pub")
-  lifecycle {
-    ignore_changes = [public_key]
-  }
-}
+# resource "aws_key_pair" "WEB_tier" {
+#   key_name   = "WEB_tier"
+#   public_key = file("~/.ssh/cloud_2024.pem.pub")
+#   lifecycle {
+#     ignore_changes = [public_key]
+#   }
+# }
+# resource "aws_key_pair" "APP_tier" {
+#   key_name   = "APP_tier"
+#   public_key = file("~/.ssh/cloud_2024.pem.pub")
+#   lifecycle {
+#     ignore_changes = [public_key]
+#   }
+# }
