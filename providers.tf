@@ -3,7 +3,7 @@ terraform {
     organization = "pitt412"
 
     workspaces {
-      name = "Mini_project"
+      name = "GoGreen_project"
     }
   }
   required_providers {
@@ -15,5 +15,5 @@ terraform {
 }
 
 provider "aws" {
-  region = "us-east-1"
+  region = "us-west-1"
 }

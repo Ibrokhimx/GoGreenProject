@@ -1,72 +1,113 @@
-resource "aws_iam_user" "sysadmin1" {
-  name = "sysadmin1"
-
-  tags = {
-    creator = "sysadmin1"
-  }
-}
-resource "aws_iam_access_key" "sysadmin1_access_key" {
-  user = aws_iam_user.sysadmin1.name
-}
-
-output "access_key_id" {
-  value = aws_iam_access_key.sysadmin1_access_key.id
-  sensitive = true
+resource "aws_iam_account_password_policy" "strict" {
+  minimum_password_length        = 8
+  max_password_age               = 90
+  password_reuse_prevention      = 3
+  require_lowercase_characters   = true
+  require_numbers                = true
+  require_uppercase_characters   = true
+  require_symbols                = true
+  allow_users_to_change_password = true
 }
 
-output "secret_access_key" {
-  value = aws_iam_access_key.sysadmin1_access_key.secret
-  sensitive = true
+resource "aws_secretsmanager_secret" "users" {
+  name                    = "users_name_password"
+  recovery_window_in_days = 0
 }
 
-locals {
-  sysadmin1_keys_csv = "access_key,secret_key\n${aws_iam_access_key.sysadmin1_access_key.id},${aws_iam_access_key.achintha_access_key.secret}"
+resource "aws_secretsmanager_secret_version" "users" {
+  secret_id = aws_secretsmanager_secret.users.id
+  secret_string = jsonencode({
+    username = "${aws_iam_user.users["sysadmin1"].name}"
+    password = "${aws_iam_user_login_profile.password["sysadmin1"].password}"
+    username = "${aws_iam_user.users["sysadmin2"].name}"
+    password = "${aws_iam_user_login_profile.password["sysadmin2"].password}"
+    username = "${aws_iam_user.users["monitor1"].name}"
+    password = "${aws_iam_user_login_profile.password["monitor1"].password}"
+    username = "${aws_iam_user.users["monitor2"].name}"
+    password = "${aws_iam_user_login_profile.password["monitor2"].password}"
+    username = "${aws_iam_user.users["monitor3"].name}"
+    password = "${aws_iam_user_login_profile.password["monitor3"].password}"
+    username = "${aws_iam_user.users["monitor4"].name}"
+    password = "${aws_iam_user_login_profile.password["monitor4"].password}"
+    username = "${aws_iam_user.users["dbadmin1"].name}"
+    password = "${aws_iam_user_login_profile.password["dbadmin1"].password}"
+    username = "${aws_iam_user.users["dbadmin2"].name}"
+    password = "${aws_iam_user_login_profile.password["dbadmin2"].password}"
+  })
 }
 
-resource "local_file" "sysadmin1_keys" {
-  content  = local.sysadmin1_keys_csv
-  filename = "asysadmin1-keys.csv"
+resource "aws_iam_user" "users" {
+  for_each = var.iam_user
+  name     = each.value.name
+  tags     = each.value["tags"]
 }
+
+resource "aws_iam_user_login_profile" "password" {
+  for_each = aws_iam_user.users
+  user     = aws_iam_user.users[each.key].name
+}
+
 resource "aws_iam_group" "system_admins" {
   name = "system-administrators"
 }
 
-resource "aws_iam_group_membership" "sysadmin1_membership" {
-  name = aws_iam_user.sysadmin1.name
-  users = [aws_iam_user.sysadmin1.name]
-  group = aws_iam_group.system_admins.name
-}
-#rds full
-data "aws_iam_policy" "rds_full_access" {
-  arn = "arn:aws:iam::aws:policy/AmazonRDSFullAccess"
+resource "aws_iam_group" "system_monitor" {
+  name = "system-monitors"
 }
 
-#ec2 custome
-
-data "aws_iam_policy_document" "ec2_instance_actions" {
-  statement {
-    actions = [
-      "ec2:StartInstances",
-      "ec2:StopInstances",
-    ]
-
-    resources = [
-      "arn:aws:ec2:*:*:instance/*",
-    ]
-  }
+resource "aws_iam_group" "db_admins" {
+  name = "database-administrators"
 }
 
-resource "aws_iam_policy" "ec2_instance_actions" {
-  name        = "ec2_instance_actions"
-  policy      = data.aws_iam_policy_document.ec2_instance_actions.json
+resource "aws_iam_group_membership" "sysadmin_membership" {
+  for_each = aws_iam_user.users
+  name     = "sysadmin_membership"
+  users    = [aws_iam_user.users["sysadmin1"].name, aws_iam_user.users["sysadmin2"].name]
+  group    = aws_iam_group.system_admins.name
 }
 
-resource "aws_iam_group_policy_attachment" "terraform-developers_rds_full_access" {
-  policy_arn = data.aws_iam_policy.rds_full_access.arn
-  group      = aws_iam_group.terraform-developers.name
+resource "aws_iam_group_membership" "monitor_membership" {
+  for_each = aws_iam_user.users
+  name     = "monitor_membership"
+  users = [aws_iam_user.users["monitor1"].name, aws_iam_user.users["monitor2"].name,
+    aws_iam_user.users["monitor3"].name, aws_iam_user.users["monitor4"].name
+  ]
+
+  group = aws_iam_group.system_monitor.name
 }
 
-resource "aws_iam_group_policy_attachment" "developers_ec2_instance_actions" {
-  policy_arn = aws_iam_policy.ec2_instance_actions.arn
-  group      = aws_iam_group.terraform-developers.name
+resource "aws_iam_group_membership" "dbadmin_membership" {
+  for_each = aws_iam_user.users
+  name     = "dbadmin_membership"
+  users    = [aws_iam_user.users["dbadmin1"].name, aws_iam_user.users["dbadmin2"].name]
+  group    = aws_iam_group.db_admins.name
 }
+
+data "aws_iam_policy" "sysadmin" {
+  arn = "arn:aws:iam::aws:policy/job-function/SystemAdministrator"
+
+}
+
+data "aws_iam_policy" "monitor" {
+  arn = "arn:aws:iam::aws:policy/job-function/ViewOnlyAccess"
+
+}
+
+data "aws_iam_policy" "db_admin" {
+  arn = "arn:aws:iam::aws:policy/job-function/DatabaseAdministrator"
+}
+resource "aws_iam_group_policy_attachment" "sysadmin" {
+  policy_arn = data.aws_iam_policy.sysadmin.arn
+  group      = aws_iam_group.system_admins.name
+}
+
+resource "aws_iam_group_policy_attachment" "monitor" {
+  policy_arn = data.aws_iam_policy.monitor.arn
+  group      = aws_iam_group.system_monitor.name
+}
+
+resource "aws_iam_group_policy_attachment" "db_admin" {
+  policy_arn = data.aws_iam_policy.db_admin.arn
+  group      = aws_iam_group.db_admins.name
+}
+
