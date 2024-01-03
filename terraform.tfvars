@@ -146,34 +146,34 @@
 public_subnets = {
   Public_Sub_WEB_1C = {
     name              = "Public_Sub_WEB_1C",
-    cidr_block        = "54.0.1.0/24"
+    cidr_block        = "10.0.1.0/24"
     availability_zone = "us-west-1c"
   },
   Public_Sub_WEB_1B = {
     name              = "Public_Sub_WEB_1B",
-    cidr_block        = "54.0.2.0/24"
+    cidr_block        = "10.0.2.0/24"
     availability_zone = "us-west-1b"
   },
 }
 private_subnets = {
   Private_Sub_APP_1C = {
     name              = "Private_Sub_APP_1C",
-    cidr_block        = "54.0.3.0/24"
+    cidr_block        = "10.0.3.0/24"
     availability_zone = "us-west-1c"
   },
   Private_Sub_APP_1B = {
     name              = "Private_Sub_APP_1B",
-    cidr_block        = "54.0.4.0/24"
+    cidr_block        = "10.0.4.0/24"
     availability_zone = "us-west-1b"
   },
   Private_Sub_DB_1C = {
     name              = "Private_Sub_DB_1C",
-    cidr_block        = "54.0.5.0/24"
+    cidr_block        = "10.0.5.0/24"
     availability_zone = "us-west-1c"
   },
   Private_Sub_DB_1B = {
     name              = "Private_Sub_DB_1B",
-    cidr_block        = "54.0.6.0/24"
+    cidr_block        = "10.0.6.0/24"
     availability_zone = "us-west-1b"
   }
 }

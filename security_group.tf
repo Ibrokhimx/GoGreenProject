@@ -37,30 +37,22 @@ module "web_security_group" {
       description = "Security group for web load balancer"
       ingress_rules = [
         {
-          description = "ingress rule for http"
-          priority    = 220
-          from_port   = 80
-          to_port     = 80
-          protocol    = "tcp"
-          cidr_blocks = ["0.0.0.0/0"]
+          description      = "ingress rule for http"
+          priority         = 220
+          from_port        = 80
+          to_port          = 80
+          protocol         = "tcp"
+          cidr_blocks      = ["0.0.0.0/0"]
+          ipv6_cidr_blocks = ["::/0"]
         },
         {
-          description = "my_ssh"
-          priority    = 202
-          from_port   = 22
-          to_port     = 22
-          protocol    = "tcp"
-          #cidr_blocks = ["0.0.0.0/0"]
-          cidr_blocks = [join("", [aws_instance.bastion.private_ip, "/32"])]
-          security_groups = [module.bastion_security_group.security_group_id["bastion_sg"]]
-        },
-        {
-          description = "ingress rule for http"
-          priority    = 204
-          from_port   = 443
-          to_port     = 443
-          protocol    = "tcp"
-          cidr_blocks = ["0.0.0.0/0"]
+          description      = "ingress rule for http"
+          priority         = 204
+          from_port        = 443
+          to_port          = 443
+          protocol         = "tcp"
+          cidr_blocks      = ["0.0.0.0/0"]
+          ipv6_cidr_blocks = ["::/0"]
         }
       ],
       egress_rules = [
@@ -125,13 +117,13 @@ module "web_security_group1" {
           security_groups = [module.web_security_group.security_group_id["alb_web_sg"]]
         },
         {
-          description     = "my_ssh"
-          priority        = 208
-          from_port       = 22
-          to_port         = 22
-          protocol        = "tcp"
-          #cidr_blocks = ["0.0.0.0/0"]
-          cidr_blocks     = [join("", [aws_instance.bastion.private_ip, "/32"])]
+          description = "my_ssh"
+          priority    = 208
+          from_port   = 22
+          to_port     = 22
+          protocol    = "tcp"
+          cidr_blocks = ["0.0.0.0/0"]
+          #cidr_blocks     = [join("", [aws_instance.bastion.private_ip, "/32"])]
           security_groups = [module.bastion_security_group.security_group_id["bastion_sg"]]
         },
         {
@@ -142,7 +134,7 @@ module "web_security_group1" {
           protocol    = "tcp"
           cidr_blocks = ["0.0.0.0/0"]
         }
-      ]
+      ],
       egress_rules = [
         {
           description = "egress rule"
@@ -172,10 +164,10 @@ module "app_security_group" {
           protocol        = "tcp"
           security_groups = [module.web_security_group1.security_group_id["web_ec2_sg"]]
         }
-      ]
+      ],
       egress_rules = [
         {
-          description = ""
+          description = "egress rule"
           from_port   = 0
           to_port     = 0
           protocol    = "-1"
@@ -239,7 +231,7 @@ module "app_security_group1" {
           protocol    = "tcp"
           cidr_blocks = [join("", [aws_instance.bastion.private_ip, "/32"])]
         }
-      ]
+      ],
       egress_rules = [
         {
           description = "egress rule"
@@ -268,7 +260,7 @@ module "db_security_group" {
           protocol        = "tcp"
           security_groups = [module.app_security_group1.security_group_id["app_ec2_sg"]]
         }
-      ]
+      ],
       egress_rules = [
         {
           description = "egress rule"
@@ -287,7 +279,7 @@ module "db_security_group" {
 #   from_port                = 80
 #   to_port                  = 80
 #   protocol                 = "tcp"
-#   source_security_group_id = "${module.web_security_group.security_group_id["web_ec2_sg"]}"
+#   source_security_group_id = "${module.web_security_group1.security_group_id["web_ec2_sg"]}"
 #   security_group_id        = "${module.web_security_group.security_group_id["alb_web_sg"]}"
 # }
 
@@ -297,5 +289,5 @@ module "db_security_group" {
 #   to_port                  = 80
 #   protocol                 = "tcp"
 #   source_security_group_id = "${module.app_security_group.security_group_id["alb_app_sg"]}"
-#   security_group_id        = "${module.app_security_group.security_group_id["app_ec2_sg"]}"
+#   security_group_id        = "${module.app_security_group1.security_group_id["app_ec2_sg"]}"
 # }
