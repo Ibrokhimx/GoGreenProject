@@ -28,7 +28,7 @@ jobs:
       - name: Run Terraform Apply
         run: terraform apply -auto-approve
         working-directory: 
-      - name: Wait 10 minutes for testing
+      - name: Wait 30 minutes for testing
         run: sleep 1800
         working-directory: 
       - name: Run Terraform Apply

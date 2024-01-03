@@ -10,7 +10,7 @@ resource "aws_iam_account_password_policy" "strict" {
 }
 
 resource "aws_secretsmanager_secret" "users" {
-  name                    = "users_name_password"
+  name                    = "users_name_password1"
   recovery_window_in_days = 0
 }
 
