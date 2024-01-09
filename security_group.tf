@@ -1,7 +1,7 @@
 module "bastion_security_group" {
   source  = "app.terraform.io/pitt412/security-groups/aws"
   version = "4.0.0"
-  vpc_id  = aws_vpc.vpc.id
+  vpc_id  = module.gogreen_vpc.vpc_id
   security_groups = {
     "bastion_sg" : {
       description = "Security group for bastion host"
@@ -31,7 +31,7 @@ module "bastion_security_group" {
 module "web_security_group" {
   source  = "app.terraform.io/pitt412/security-groups/aws"
   version = "4.0.0"
-  vpc_id  = aws_vpc.vpc.id
+  vpc_id  = module.gogreen_vpc.vpc_id
   security_groups = {
     "alb_web_sg" : {
       description = "Security group for web load balancer"
@@ -71,7 +71,7 @@ module "web_security_group" {
 module "web_security_group1" {
   source  = "app.terraform.io/pitt412/security-groups/aws"
   version = "4.0.0"
-  vpc_id  = aws_vpc.vpc.id
+  vpc_id  = module.gogreen_vpc.vpc_id
   security_groups = {
     "web_ec2_sg" : {
       description = "Security group for web servers"
@@ -119,7 +119,7 @@ module "web_security_group1" {
 module "app_security_group" {
   source  = "app.terraform.io/pitt412/security-groups/aws"
   version = "4.0.0"
-  vpc_id  = aws_vpc.vpc.id
+  vpc_id  = module.gogreen_vpc.vpc_id
   security_groups = {
     "alb_app_sg" : {
       description = "Security group for app loadbalancer"
@@ -148,7 +148,7 @@ module "app_security_group" {
 module "app_security_group1" {
   source  = "app.terraform.io/pitt412/security-groups/aws"
   version = "4.0.0"
-  vpc_id  = aws_vpc.vpc.id
+  vpc_id  = module.gogreen_vpc.vpc_id
   security_groups = {
     "app_ec2_sg" : {
       description = "Security group for app servers"
@@ -185,7 +185,7 @@ module "app_security_group1" {
 module "db_security_group" {
   source  = "app.terraform.io/pitt412/security-groups/aws"
   version = "4.0.0"
-  vpc_id  = aws_vpc.vpc.id
+  vpc_id  = module.gogreen_vpc.vpc_id
   security_groups = {
     "db_sg" : {
       description = "Security group for Database"

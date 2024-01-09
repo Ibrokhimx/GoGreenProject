@@ -2,18 +2,26 @@ resource "aws_launch_template" "WEB_lc" {
   name_prefix   = var.prefix
   description   = "Template to launch EC2 instance and deploy the application"
   image_id      = data.aws_ami.amazon-linux2.id
-  instance_type = "t2.micro"
-  key_name      = "GoGreen"
+  instance_type = var.instance_type
+  key_name      = var.key_name
   #key_name               = aws_key_pair.WEB_tier.key_name
   vpc_security_group_ids = [module.web_security_group1.security_group_id["web_ec2_sg"]]
   # iam_instance_profile {
   #     arn = aws_iam_instance_profile.IAMinstanceprofile.arn
   # }
-  user_data = filebase64("application.sh")
+  user_data = filebase64("script.sh")
+  tag_specifications {
+    resource_type = "instance"
+
+    tags = {
+      Name = "Gogreen-web-instance"
+    }
+  }
 
 }
 resource "aws_autoscaling_group" "WEB_asg" {
-  vpc_zone_identifier       = [aws_subnet.public_subnet["Public_Sub_WEB_1C"].id, aws_subnet.public_subnet["Public_Sub_WEB_1B"].id]
+  vpc_zone_identifier = [module.public_subnets.subnet_ids["Public_Sub_WEB_1C"], module.public_subnets.subnet_ids["Public_Sub_WEB_1B"]]
+  #vpc_zone_identifier       = [aws_subnet.public_subnet["Public_Sub_WEB_1C"].id, aws_subnet.public_subnet["Public_Sub_WEB_1B"].id]
   desired_capacity          = 2
   max_size                  = 4
   min_size                  = 2
@@ -47,13 +55,14 @@ resource "aws_autoscaling_policy" "WEB_asg_policy" {
 }
 
 resource "aws_lb" "WEB_alb" {
-  #name_prefix        = var.prefix
+  name_prefix        = "web-lb"
   idle_timeout       = 65
   internal           = false
   load_balancer_type = "application"
   ip_address_type    = "ipv4"
   security_groups    = [module.web_security_group.security_group_id["alb_web_sg"]]
-  subnets            = [aws_subnet.public_subnet["Public_Sub_WEB_1C"].id, aws_subnet.public_subnet["Public_Sub_WEB_1B"].id]
+  subnets            = [module.public_subnets.subnet_ids["Public_Sub_WEB_1C"], module.public_subnets.subnet_ids["Public_Sub_WEB_1B"]]
+  #subnets            = [aws_subnet.public_subnet["Public_Sub_WEB_1C"].id, aws_subnet.public_subnet["Public_Sub_WEB_1B"].id]
 }
 resource "aws_lb_listener" "WEB_alb_listener_1" {
   load_balancer_arn = aws_lb.WEB_alb.arn
@@ -66,10 +75,10 @@ resource "aws_lb_listener" "WEB_alb_listener_1" {
   }
 }
 resource "aws_lb_target_group" "WEB_tg" {
-  name        = "web"
+  name        = "web-tg"
   port        = 80
   protocol    = "HTTP"
-  vpc_id      = aws_vpc.vpc.id
+  vpc_id      = module.gogreen_vpc.vpc_id
   target_type = "instance"
   health_check {
     path                = "/"

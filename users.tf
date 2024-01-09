@@ -17,6 +17,7 @@ resource "aws_secretsmanager_secret" "users" {
 resource "aws_secretsmanager_secret_version" "users" {
   secret_id = aws_secretsmanager_secret.users.id
   secret_string = jsonencode({
+
     username1 = "${aws_iam_user.users["sysadmin1"].name}"
     password1 = "${aws_iam_user_login_profile.password["sysadmin1"].password}"
     username2 = "${aws_iam_user.users["sysadmin2"].name}"
@@ -39,8 +40,8 @@ resource "aws_secretsmanager_secret_version" "users" {
 #   for_each  = aws_iam_user.users
 #   secret_id = aws_secretsmanager_secret.users.id
 #   secret_string = jsonencode({
-#     username = "${aws_iam_user.users[each.key].name}"
-#     password = "${aws_iam_user_login_profile.password[each.key].password}"
+#     "${aws_iam_user.users[each.key].name}" = "${aws_iam_user.users[each.key].name}"
+#     "${aws_iam_user.users[each.key].name}" = "${aws_iam_user_login_profile.password[each.key].password}"
 #   })
 # }
 resource "aws_iam_user" "users" {

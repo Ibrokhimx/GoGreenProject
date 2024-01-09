@@ -1,38 +1,44 @@
+vpc_cidr_block = "10.0.0.0/16"
 public_subnets = {
   Public_Sub_WEB_1C = {
-    name              = "Public_Sub_WEB_1C",
-    cidr_block        = "10.0.1.0/24"
-    availability_zone = "us-west-1c"
+    name                    = "Public_Sub_WEB_1C",
+    cidr_block              = "10.0.1.0/24"
+    availability_zone       = "us-west-1c"
+    map_public_ip_on_launch = true
   },
   Public_Sub_WEB_1B = {
-    name              = "Public_Sub_WEB_1B",
-    cidr_block        = "10.0.2.0/24"
-    availability_zone = "us-west-1b"
+    name                    = "Public_Sub_WEB_1B",
+    cidr_block              = "10.0.2.0/24"
+    availability_zone       = "us-west-1b"
+    map_public_ip_on_launch = true
   },
 }
 private_subnets = {
   Private_Sub_APP_1C = {
-    name              = "Private_Sub_APP_1C",
-    cidr_block        = "10.0.3.0/24"
-    availability_zone = "us-west-1c"
+    name                    = "Private_Sub_APP_1C",
+    cidr_block              = "10.0.3.0/24"
+    availability_zone       = "us-west-1c"
+    map_public_ip_on_launch = false
   },
   Private_Sub_APP_1B = {
-    name              = "Private_Sub_APP_1B",
-    cidr_block        = "10.0.4.0/24"
-    availability_zone = "us-west-1b"
+    name                    = "Private_Sub_APP_1B",
+    cidr_block              = "10.0.4.0/24"
+    availability_zone       = "us-west-1b"
+    map_public_ip_on_launch = false
   },
   Private_Sub_DB_1C = {
-    name              = "Private_Sub_DB_1C",
-    cidr_block        = "10.0.5.0/24"
-    availability_zone = "us-west-1c"
+    name                    = "Private_Sub_DB_1C",
+    cidr_block              = "10.0.5.0/24"
+    availability_zone       = "us-west-1c"
+    map_public_ip_on_launch = false
   },
   Private_Sub_DB_1B = {
-    name              = "Private_Sub_DB_1B",
-    cidr_block        = "10.0.6.0/24"
-    availability_zone = "us-west-1b"
+    name                    = "Private_Sub_DB_1B",
+    cidr_block              = "10.0.6.0/24"
+    availability_zone       = "us-west-1b"
+    map_public_ip_on_launch = false
   }
 }
-
 
 nat-rta = {
   APP-1C = {
@@ -88,6 +94,25 @@ iam_user = {
     tags = { creator = "dbadmin2"
   } }
 }
+key_name = "GoGreen"
+
+instance_type = "t2.micro"
+
+db_name = "gogreendb"
+
+db_username = "dbadmin"
+
+db_engine = "mysql"
+
+db_identifier = "myrdsinstance"
+
+db_engine_version = "5.7"
+
+db_instance_class = "db.t2.micro"
+
+db_parameter_group_name = "default.mysql5.7"
+
+db_allocated_storage = 20
 
 # nat-rta = {
 #   APP-1C = {

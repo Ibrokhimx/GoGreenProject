@@ -1,8 +1,17 @@
+variable "vpc_cidr_block" {
+  type    = string
+  default = ""
+}
+# variable "true" {
+#   type = bool
+#   default = false
+# }
 variable "public_subnets" {
   type = map(object({
-    name              = string,
-    cidr_block        = string,
-    availability_zone = string
+    name                    = string,
+    cidr_block              = string,
+    availability_zone       = string,
+    map_public_ip_on_launch = bool
   }))
 
   default = {
@@ -10,9 +19,10 @@ variable "public_subnets" {
 }
 variable "private_subnets" {
   type = map(object({
-    name              = string,
-    cidr_block        = string,
-    availability_zone = string
+    name                    = string,
+    cidr_block              = string,
+    availability_zone       = string,
+    map_public_ip_on_launch = bool
   }))
 
   default = {
@@ -31,6 +41,66 @@ variable "nat-rta" {
   default = {
   }
 }
+variable "key_name" {
+  type    = string
+  default = ""
+
+}
+variable "instance_type" {
+  type    = string
+  default = ""
+
+}
+variable "bastion_name" {
+  type    = string
+  default = "bastion-host"
+
+}
+variable "db_name" {
+  type    = string
+  default = ""
+
+}
+variable "db_username" {
+  type    = string
+  default = ""
+
+}
+variable "db_engine" {
+  type    = string
+  default = ""
+
+}
+variable "db_identifier" {
+  type    = string
+  default = ""
+
+}
+variable "db_engine_version" {
+  type    = string
+  default = ""
+
+}
+
+variable "db_instance_class" {
+  type    = string
+  default = ""
+
+}
+
+variable "db_parameter_group_name" {
+  type    = string
+  default = ""
+
+}
+
+variable "db_allocated_storage" {
+  type    = string
+  default = ""
+
+}
+
+
 # variable "security-groups" {
 #   description = "A map of security groups with their rules"
 #   type = map(object({
@@ -55,20 +125,13 @@ variable "nat-rta" {
 #     }))
 #   }))
 # }
-variable "key_name" {
-  type    = string
-  default = ""
-}
 
-variable "ssl_certificate_arn" {
-  type    = string
-  default = ""
-}
 
-variable "database_name" {
-  type    = string
-  default = ""
-}
+# variable "ssl_certificate_arn" {
+#   type    = string
+#   default = ""
+# }
+
 # variable "iam_user" {
 #   type = map(object({
 #     name = string,
