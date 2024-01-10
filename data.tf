@@ -14,9 +14,3 @@ data "aws_ami" "amazon-linux2" {
 #     values = ["amzn2-ami-kernel-*"]
 #   }
 # }
-# data "template_file" "html" {
-#   template = file("app.tpl")
-#   vars = {
-#     #JDK_VERSION = "openjdk-8-jdk"
-#   }
-# }

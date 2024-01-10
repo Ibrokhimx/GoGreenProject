@@ -1,19 +1,21 @@
-variable vpc_id {
-    type=string
-}
-
-variable "cidr_subnet" {
+variable "vpc_id" {
   type = string
 }
 
-variable "az_subnet" {
+variable "subnets" {
+  type = map(object({
+    name              = string
+    cidr_block        = string
+    availability_zone = string
+    map_public_ip_on_launch = bool
+  }))
+  default = {}
+}
+
+variable "prefix" {
   type = string
 }
-
-variable "tags_subnet" {
-  type = map(any)
-}
-
-variable "public" {
-  type = bool
-}
+# variable "map_public_ip_on_launch" {
+#   type = bool
+  
+# }
