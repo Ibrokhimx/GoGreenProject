@@ -28,8 +28,8 @@ jobs:
       - name: Run Terraform Apply
         run: terraform apply -auto-approve
         working-directory: 
-      - name: Wait 60 minutes for testing
-        run: sleep 3600
+      - name: Wait 90 minutes for testing
+        run: sleep 5400
         working-directory: 
       - name: Run Terraform Destroy
         run: terraform apply -destroy -auto-approve
