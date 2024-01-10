@@ -39,5 +39,25 @@ resource "aws_db_instance" "gogreen_mysql_db" {
   db_subnet_group_name = aws_db_subnet_group.database_subnet_group.id
 }
 
+resource "aws_ssm_parameter" "endpoint" {
+  name  = "/example/endpoint"
+  type  = "SecureString"
+  value = aws_db_instance.gogreen_mysql_db.endpoint
+}
 
+resource "aws_ssm_parameter" "username" {
+  name  = "/example/username"
+  type  = "SecureString"
+  value = var.db_username
+}
 
+resource "aws_ssm_parameter" "database" {
+  name  = "/example/database"
+  type  = "SecureString"
+  value = var.db_name
+}
+resource "aws_ssm_parameter" "password" {
+  name  = "/example/password"
+  type  = "SecureString"
+  value = random_password.db_password.result
+}

@@ -101,6 +101,31 @@ variable "db_allocated_storage" {
 }
 
 
+
+variable "iam_user" {
+  type = map(object({
+    name = string,
+    tags = map(string)
+  }))
+  default = {
+
+  }
+}
+variable "dbusername" {
+  description = "The username for the DB master user"
+  type        = string
+  default     = "admin"
+}
+variable "dbpassword" {
+  description = "The password for the DB master user"
+  type        = string
+  default     = "password"
+}
+variable "admin_ip" {
+  type    = string
+  default = "0.0.0.0/0"
+}
+
 # variable "security-groups" {
 #   description = "A map of security groups with their rules"
 #   type = map(object({
@@ -141,26 +166,3 @@ variable "db_allocated_storage" {
 #   default = {
 #   }
 # }
-variable "iam_user" {
-  type = map(object({
-    name = string,
-    tags = map(string)
-  }))
-  default = {
-
-  }
-}
-variable "dbusername" {
-  description = "The username for the DB master user"
-  type        = string
-  default     = "admin"
-}
-variable "dbpassword" {
-  description = "The password for the DB master user"
-  type        = string
-  default     = "password"
-}
-variable "admin_ip" {
-  type    = string
-  default = "0.0.0.0/0"
-}

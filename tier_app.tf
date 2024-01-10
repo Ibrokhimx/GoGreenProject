@@ -6,9 +6,9 @@ resource "aws_launch_template" "APP_lc" {
   key_name      = var.key_name
   #key_name               = aws_key_pair.WEB_tier.key_name
   vpc_security_group_ids = [module.app_security_group1.security_group_id["app_ec2_sg"]]
-  # iam_instance_profile {
-  #   arn = aws_iam_instance_profile.s3_profile.arn
-  # }
+  iam_instance_profile {
+    arn = aws_iam_instance_profile.s3_profile.arn
+  }
   user_data = filebase64("script.sh")
   tag_specifications {
     resource_type = "instance"

@@ -91,38 +91,7 @@ resource "aws_route_table_association" "rt-nat" {
 #   }
 # }
 
-# resource "aws_vpc" "vpc" {
-#   cidr_block           = var.vpc_cidr_block
-#   enable_dns_hostnames = true
-#   enable_dns_support   = true
-
-#   tags = {
-#     Name = "${var.prefix}-vpc"
-#   }
-# }
 
 
 
-# resource "aws_subnet" "public_subnet" {
-#   vpc_id                  = module.gogreen_vpc.vpc_id
-#   for_each                = var.public_subnets
-#   cidr_block              = each.value.cidr_block
-#   availability_zone       = each.value.availability_zone
-#   map_public_ip_on_launch = true
 
-#   tags = {
-#     Name = "${each.value.name}"
-#   }
-# }
-
-# resource "aws_subnet" "private_subnet" {
-#   vpc_id            = module.gogreen_vpc.vpc_id
-#   for_each          = var.private_subnets
-#   cidr_block        = each.value.cidr_block
-#   availability_zone = each.value.availability_zone
-#   #map_public_ip_on_launch = true
-
-#   tags = {
-#     Name = "${each.value.name}"
-#   }
-# }
