@@ -20,10 +20,10 @@ resource "aws_route53_record" "alias_route53_record" {
   }
 }
 
-resource "aws_route53_record" "www" {
-  zone_id = aws_route53_zone.primary.zone_id
-  name    = "uzinx.org"
-  type    = "A"
-  ttl     = 300
-  records = [aws_lb.WEB_alb.dns_name]
-}
+# resource "aws_route53_record" "www" {
+#   zone_id = aws_route53_zone.primary.zone_id
+#   name    = "uzinx.org"
+#   type    = "A"
+#   ttl     = 300
+#   records = [aws_lb.WEB_alb.dns_name]
+# }
